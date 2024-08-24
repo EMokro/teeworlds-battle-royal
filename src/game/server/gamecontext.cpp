@@ -20,6 +20,7 @@
 #include "gamemodes/lts.h"
 #include "gamemodes/mod.h"
 #include "gamemodes/tdm.h"
+#include "gamemodes/battleroyal.h"
 #include "gamecontext.h"
 #include "player.h"
 
@@ -508,7 +509,8 @@ void CGameContext::CheckPureTuning()
 		str_comp(m_pController->GetGameType(), "TDM")==0 ||
 		str_comp(m_pController->GetGameType(), "CTF")==0 ||
 		str_comp(m_pController->GetGameType(), "LMS")==0 ||
-		str_comp(m_pController->GetGameType(), "LTS")==0)
+		str_comp(m_pController->GetGameType(), "LTS")==0 ||
+    str_comp(m_pController->GetGameType(), "Battleroyal")==0)
 	{
 		CTuningParams p;
 		if(mem_comp(&p, &m_Tuning, sizeof(p)) != 0)
@@ -1626,10 +1628,12 @@ void CGameContext::OnInit()
 		m_pController = new CGameControllerLTS(this);
 	else if(str_comp_nocase(Config()->m_SvGametype, "tdm") == 0)
 		m_pController = new CGameControllerTDM(this);
-	else
+	else if(str_comp_nocase(Config()->m_SvGametype, "dm") == 0)
 		m_pController = new CGameControllerDM(this);
+  else
+    m_pController = new CGameControllerBattleroyal(this);
 
-	m_pController->RegisterChatCommands(CommandManager());
+  m_pController->RegisterChatCommands(CommandManager());
 
 	// create all entities from the game layer
 	CMapItemLayerTilemap *pTileMap = m_Layers.GameLayer();

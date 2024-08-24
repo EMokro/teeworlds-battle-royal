@@ -1208,7 +1208,7 @@ function(generate_source output_file script_parameter)
   )
 endfunction()
 
-file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/src/generated/")
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/../src/generated/")
 if(GIT_FOUND)
   execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --git-dir
     ERROR_QUIET
@@ -1223,27 +1223,27 @@ if(GIT_FOUND)
     )
   endif()
 endif()
-add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/src/generated/git_revision.cpp
+add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/../src/generated/git_revision.cpp
   COMMAND ${Python3_EXECUTABLE}
     scripts/git_revision.py
-    > ${PROJECT_BINARY_DIR}/src/generated/git_revision.cpp
+    > ${PROJECT_BINARY_DIR}/../src/generated/git_revision.cpp
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   DEPENDS
     ${GIT_REVISION_EXTRA_DEPS}
     scripts/git_revision.py
 )
-chash("src/generated/nethash.cpp"
+chash("../src/generated/nethash.cpp"
   "src/engine/shared/protocol.h"
   "src/game/tuning.h"
   "src/game/gamecore.cpp"
-  "${PROJECT_BINARY_DIR}/src/generated/protocol.h"
+  "${PROJECT_BINARY_DIR}/../src/generated/protocol.h"
 )
-generate_source("src/generated/client_data.cpp" "client_content_source")
-generate_source("src/generated/client_data.h" "client_content_header")
-generate_source("src/generated/protocol.cpp" "network_source")
-generate_source("src/generated/protocol.h" "network_header")
-generate_source("src/generated/server_data.cpp" "server_content_source")
-generate_source("src/generated/server_data.h" "server_content_header")
+generate_source("../src/generated/client_data.cpp" "client_content_source")
+generate_source("../src/generated/client_data.h" "client_content_header")
+generate_source("../src/generated/protocol.cpp" "network_source")
+generate_source("../src/generated/protocol.h" "network_header")
+generate_source("../src/generated/server_data.cpp" "server_content_source")
+generate_source("../src/generated/server_data.h" "server_content_header")
 
 
 ########################################################################
@@ -1347,7 +1347,7 @@ set_src(ENGINE_SHARED GLOB src/engine/shared
   snapshot.h
   storage.cpp
 )
-set(ENGINE_GENERATED_SHARED src/generated/nethash.cpp src/generated/protocol.cpp src/generated/protocol.h)
+set(ENGINE_GENERATED_SHARED ../src/generated/nethash.cpp ../src/generated/protocol.cpp ../src/generated/protocol.h)
 set_src(GAME_SHARED GLOB src/game
   collision.cpp
   collision.h
@@ -1363,9 +1363,9 @@ set_src(GAME_SHARED GLOB src/game
   voting.h
 )
 set(GAME_GENERATED_SHARED
-  src/generated/git_revision.cpp
-  src/generated/nethash.cpp
-  src/generated/protocol.h
+  ../src/generated/git_revision.cpp
+  ../src/generated/nethash.cpp
+  ../src/generated/protocol.h
 )
 
 set(DEPS ${DEP_JSON} ${DEP_MD5} ${ZLIB_DEP})
@@ -1508,8 +1508,8 @@ if(CLIENT)
     popups.cpp
   )
   set(GAME_GENERATED_CLIENT
-    src/generated/client_data.cpp
-    src/generated/client_data.h
+    ../src/generated/client_data.cpp
+    ../src/generated/client_data.h
   )
   set(CLIENT_SRC ${PLATFORM_CLIENT} ${ENGINE_CLIENT} ${GAME_CLIENT} ${GAME_EDITOR} ${GAME_GENERATED_CLIENT})
 
@@ -1619,14 +1619,16 @@ set_src(GAME_SERVER GLOB_RECURSE src/game/server
   gamemodes/mod.h
   gamemodes/tdm.cpp
   gamemodes/tdm.h
+  gamemodes/battleroyal.cpp
+  gamemodes/battleroyal.h
   gameworld.cpp
   gameworld.h
   player.cpp
   player.h
 )
 set(GAME_GENERATED_SERVER
-  src/generated/server_data.cpp
-  src/generated/server_data.h
+  ../src/generated/server_data.cpp
+  ../src/generated/server_data.h
 )
 set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${GAME_GENERATED_SERVER})
 if(TARGET_OS STREQUAL "windows")
@@ -1666,7 +1668,7 @@ endif()
 
 set_src(MASTERSRV_SRC GLOB src/mastersrv mastersrv.cpp mastersrv.h)
 set_src(VERSIONSRV_SRC GLOB src/versionsrv mapversions.h versionsrv.cpp versionsrv.h)
-list(APPEND VERSIONSRV_SRC ${PROJECT_BINARY_DIR}/src/generated/nethash.cpp)
+list(APPEND VERSIONSRV_SRC ${PROJECT_BINARY_DIR}/../src/generated/nethash.cpp)
 
 set(TARGET_MASTERSRV mastersrv)
 set(TARGET_VERSIONSRV versionsrv)
